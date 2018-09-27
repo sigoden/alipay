@@ -1,0 +1,54 @@
+{
+  "name": "@sigodenjs/alipay",
+  "version": "0.1.0",
+  "description": "蚂蚁金服开放平台 SDK",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "alipay",
+    "pay"
+  ],
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "directories": {
+    "test": "test"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "jest",
+    "build": "tsc",
+    "docs": "typedoc --mode file --out docs src",
+    "build:prod": "tsc -p tsconfig.prod.json",
+    "clean": "rimraf dist",
+    "prepublish": "npm run clean && npm run build:prod",
+    "lint": "tslint -p tsconfig.json --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sigoden/alipay.git"
+  },
+  "author": "Sigoden Huang <sigoden@gmail.com> (https://sigoden.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sigoden/alipay/issues"
+  },
+  "homepage": "https://github.com/sigoden/alipay#readme",
+  "devDependencies": {
+    "@types/jest": "^23.3.2",
+    "@types/lodash.omit": "^4.5.4",
+    "@types/request": "^2.47.1",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.2",
+    "tslint": "^5.11.0",
+    "typedoc": "^0.12.0",
+    "typescript": "^3.0.3"
+  },
+  "dependencies": {
+    "@types/node": "^10.11.0",
+    "lodash.omit": "^4.5.0",
+    "request": "^2.88.0"
+  }
+}
