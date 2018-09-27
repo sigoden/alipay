@@ -85,9 +85,9 @@ client.execute("alipay.offline.material.image.upload", {
 
 业务类比照蚂蚁金服开放平台 API 文档的接口进行归类。它最大的作用是提供类型系统支持。
 
-- `Pay`封装支付API
-- `Finance`封装财务API
-- `Monitor`封装云监控API
+- [Pay](https://sigoden.github.io/alipay/classes/pay) - 支付API
+- [Finance](https://sigoden.github.io/alipay/classes/finance) - 财务API
+- [Monitor](https://sigoden.github.io/alipay/classes/monitor) - 云监控API
 
 # 支付宝开放平台配置
 
