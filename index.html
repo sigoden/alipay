@@ -1,0 +1,467 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>@sigodenjs/alipay</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">@sigodenjs/alipay</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> @sigodenjs/alipay</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="alipay-sdk">Alipay SDK</h1>
+				<p>蚂蚁金服开放平台 SDK</p>
+				<blockquote>
+					<p>第一次使用，请参考<a href="#%E6%94%AF%E4%BB%98%E5%AE%9D%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E9%85%8D%E7%BD%AE">支付宝开放平台配置</a>设置公钥</p>
+				</blockquote>
+				<h1 id="sdk-">SDK 使用文档</h1>
+				<h2 id="-">开始使用</h2>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { Client, Pay } = <span class="hljs-built_in">require</span>(<span class="hljs-string">"@sigodenjs/alipay"</span>);
+<span class="hljs-keyword">const</span> errors = <span class="hljs-built_in">require</span>(<span class="hljs-string">"@sigodenjs/alipay/errors"</span>);
+<span class="hljs-keyword">const</span> client = <span class="hljs-keyword">new</span> Client({
+  <span class="hljs-attr">appId</span>: <span class="hljs-string">"2016123456789012"</span>,
+  <span class="hljs-attr">privateKey</span>: fs.readFileSync(<span class="hljs-string">"./private-key.pem"</span>, <span class="hljs-string">"ascii"</span>),
+  <span class="hljs-attr">alipayPublicKey</span>: fs.readFileSync(<span class="hljs-string">"./public-key.pem"</span>, <span class="hljs-string">"ascii"</span>)
+});
+
+<span class="hljs-comment">// 如果使用 AES 加密</span>
+<span class="hljs-comment">// client.aseCode = "+a3I6ffQNJJFhH0Cq8nT5g=="</span>
+
+<span class="hljs-comment">// 1. 直接使用 client.execute</span>
+client
+  .execute(<span class="hljs-string">"alipay.trade.fastpay.refund.query"</span>, {
+    <span class="hljs-attr">trade_no</span>: <span class="hljs-string">"20150320010101001"</span>,
+    <span class="hljs-attr">out_trade_no</span>: <span class="hljs-string">"2014112611001004680073956707"</span>,
+    <span class="hljs-attr">out_request_no</span>: <span class="hljs-string">"2014112611001004680073956707"</span>,
+    <span class="hljs-attr">org_pid</span>: <span class="hljs-string">"2088101117952222"</span>
+  })
+  .then(<span class="hljs-function"><span class="hljs-params">ret</span> =&gt;</span> {});
+
+<span class="hljs-comment">// 2. 使用封装了的API</span>
+<span class="hljs-keyword">const</span> pay = <span class="hljs-keyword">new</span> Pay(client);
+pay
+  .queryRefund({
+    <span class="hljs-attr">trade_no</span>: <span class="hljs-string">"20150320010101001"</span>,
+    <span class="hljs-attr">out_trade_no</span>: <span class="hljs-string">"2014112611001004680073956707"</span>,
+    <span class="hljs-attr">out_request_no</span>: <span class="hljs-string">"2014112611001004680073956707"</span>,
+    <span class="hljs-attr">org_pid</span>: <span class="hljs-string">"2088101117952222"</span>
+  })
+  .then(<span class="hljs-function"><span class="hljs-params">ret</span> =&gt;</span> {
+    <span class="hljs-comment">//</span>
+  })
+  .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
+    <span class="hljs-keyword">if</span> (err <span class="hljs-keyword">instanceof</span> errors.RequestError) {
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (err <span class="hljs-keyword">instanceof</span> errors.ValidateSignError) {
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (err <span class="hljs-keyword">instanceof</span> errors.BusinessError) {
+    }
+  });</code></pre>
+				<h3 id="-">页面类接口调用</h3>
+				<pre><code class="language-js">client
+  .pageExecute(<span class="hljs-string">"alipay.trade.page.pay"</span>, {
+    <span class="hljs-attr">out_trade_no</span>: <span class="hljs-string">"20150320010101001"</span>,
+    <span class="hljs-attr">product_code</span>: <span class="hljs-string">"FAST_INSTANT_TRADE_PAY"</span>,
+    <span class="hljs-attr">total_amount</span>: <span class="hljs-number">88.88</span>,
+    <span class="hljs-attr">subject</span>: <span class="hljs-string">"Iphone6 16G"</span>,
+    <span class="hljs-attr">body</span>: <span class="hljs-string">"Iphone6 16G"</span>,
+    <span class="hljs-attr">passback_params</span>: <span class="hljs-string">"merchantBizType%3d3C%26merchantBizNo%3d2016010101111"</span>,
+    <span class="hljs-attr">extend_params</span>: { <span class="hljs-attr">sys_service_provider_id</span>: <span class="hljs-string">"2088511833207846"</span> }
+  })
+  .then(<span class="hljs-function"><span class="hljs-params">ret</span> =&gt;</span> {
+    res.set(<span class="hljs-string">"Content-Type"</span>, <span class="hljs-string">"text/html"</span>);
+    res.send(ret);
+  });</code></pre>
+				<h3 id="-">文件上传类接口调用</h3>
+				<pre><code class="language-js">client.execute(<span class="hljs-string">"alipay.offline.material.image.upload"</span>, {
+    <span class="hljs-attr">image_type</span>: <span class="hljs-string">'jpg'</span>,
+    <span class="hljs-attr">image_name</span>: <span class="hljs-string">'海地捞'</span>,
+    <span class="hljs-comment">// 使用 fs.createReadStream 加载图片或视频</span>
+    image_content: fs.createReadStream(<span class="hljs-string">'./海底捞.jpg'</span>)
+    imaeg_pid: <span class="hljs-string">'2088021822217233'</span>
+})</code></pre>
+				<h2 id="-">业务类</h2>
+				<p>业务类比照蚂蚁金服开放平台 API 文档的接口进行归类。它最大的作用是提供类型系统支持。</p>
+				<ul>
+					<li><a href="https://sigoden.github.io/alipay/classes/pay">Pay</a> - 支付API</li>
+					<li><a href="https://sigoden.github.io/alipay/classes/finance">Finance</a> - 财务API</li>
+					<li><a href="https://sigoden.github.io/alipay/classes/monitor">Monitor</a> - 云监控API</li>
+				</ul>
+				<h1 id="-">支付宝开放平台配置</h1>
+				<h2 id="1-">1. 注册支付宝开放平台账号</h2>
+				<p>支付宝开放平台： <a href="https://open.alipay.com/">https://open.alipay.com/</a></p>
+				<h2 id="2-">2. 生成密钥</h2>
+				<ol>
+					<li>下载 RSA 密钥工具：<a href="https://docs.open.alipay.com/291/106097/">https://docs.open.alipay.com/291/106097/</a></li>
+					<li><p>切换到生成秘钥 tab，秘钥格式选择“PKCS1（非 JAVA 适用）”</p>
+						<blockquote>
+							<p>不需要手动修改秘钥格式，SDK 会自动处理</p>
+						</blockquote>
+						<p><img src="https://gw.alipayobjects.com/zos/rmsportal/WYvBOnJBmBzBovsqYePF.png" alt="img"></p>
+					</li>
+					<li><p>新建 private-key.pem 保存私钥，文件格式如下：</p>
+						<pre><code><span class="hljs-comment">// 粘贴上一步生成的私钥到这里（不需要换行）</span></code></pre><p>完整的 private-key.pem 文件例子：</p>
+					<pre><code>MIIEpQIBAAKCAQEA7EqgH28GDbCgaonIDWIhMSPYAGMLNjCzmk7jtxNSLFjI+bbTZe43N5Bbo8cmk<span class="hljs-regexp">/LpULIGrtiyhfre1WMWIG6voK/</span>GNL+<span class="hljs-number">9</span>pY3PxkOdr+VveWp3ZDuaWQToN7Tq<span class="hljs-regexp">/f+MUMkvEBhcCP+b7UheQXX80zAEWe7HGh5mpj9bmbtb57d34e1b72GX/</span>dTVVeJDU5<span class="hljs-regexp">/Eg6L/</span>UcKeOmd4xtdGP4xqAPbgNhe2JuTOtRR<span class="hljs-regexp">/xl0ZT9mUtEpBLabrTR1EO256Zk1lzgXuMepAlyCIN0Rm0DxqnosRZjRg41ahkXs3RzInRbWXIIVdrjJsjC7rnlt6zZHdqRSDKy/</span><span class="hljs-number">9</span>sZbAv0e8ZjaHjIEnvQIDAQABAoIBAHF2zDkL6Q492GoQS14R1vpvydM1vDaDYFsisrpArt7Yq3ktz4lMwHsP+NFGWkIFDQBQ3GCtcdxgQQyajg941yEEBtthj0GmPTVpVpkWRVc6RqZ88Hr6nj<span class="hljs-regexp">/Rwl3BjrFkShMif19azpc8fvZUH9mRXyWIQVdLbeM63VOO4mz8bravhYxX3Mea8sTzo4mzfM2J+E9eLsywrFNQ44HueQZrK6d1fFdEe1bC9BrDd9xWVPuOgKBZiAnpcSla9CHbmD4YFBOmGV1/</span>+gnoDBJuaHNij4K9AuJSz90dnRUuByVfR9vMxENkBOIoOpIjs8+WvF+L2e1qKe4WhX89p9i+rpIb28kCgYEA+q0bo7s0YugkXPCMGyK0hH<span class="hljs-regexp">/CoUqkx/</span>sPjM1lJoXc24NtorX1MZcqH0Pa55A+<span class="hljs-number">6</span>rfYAiRYcW7fv+nqmc8Bz32dTWROdL27wloHBkO+p7ZuSnc6b6L1rk5da77gC4DmI01LSFXT36dRFWJOBj7rWCp0pUlxmexp+VLrEEhzJs4Ob48CgYEA8U9PVR3gUV60mymSel4o0sMcALANt5SZvX2GoJ3FMFPWLyAq7WFZnttPjwXaqEda5efB9Brp0Wm092kTcMAcus3Rkytt<span class="hljs-regexp">/DSGVGAWhkF9FcPG06mpL2UK3z6glvdOq2zjCo6oglVtCOUKj0sxXYjXAhqF/</span>SPw3Kgov2Ru9hMtDfMCgYEA0UlN1jkp15nxIhdDIjSreiQgnwDu6nfV17x0QuFoL21fT4WTHMAUTt4cGVD49oZfNgqaPLpQ3K2zTI7j+BPsDP0984GlDPKVAsn0l5lcI5e<span class="hljs-regexp">/lgz8CXcr0BUggPoxKjASNmZR6lyK+cuFUPmfC5EGqijTS6tyHtL3pjSWz0MiEkkCgYEAhSR9YTlay4q1m+cUKvBJFgERMk/</span>xQZl8OlFINtbWNhQL2XSmOtO73yqiewd<span class="hljs-regexp">/3dmBDdkR6t3upNzuPJR9ZXiaYXeuasVLqhxRAb0CsJDxs1CSI7c44i2eEg88DA/</span>oGC28F9ceosr<span class="hljs-regexp">/nijB6s5SLomSGFcKFuH9w8IEuZVwo9VwxoECgYEA4BM+BBRhtOQd8ae/</span>Y8vAH828X9euupkhIrpQvk3iptNowAniiCoDXmQtwQOyDj8O9NkvCKRZcH5eApLrDo7dIQg5bvcT894MotSDbcEBvLkLvcKfb<span class="hljs-regexp">/Vw0GFVUhUAGRebyATkA7mDCeJ1VMyj/</span>d6Ubg5FOy7L<span class="hljs-regexp">/U4X+Qwrwb/</span>B<span class="hljs-regexp">/VA=</span></code></pre></li>
+				</ol>
+				<h2 id="3-">3. 设置应用公钥</h2>
+				<ol>
+					<li><p>复制 2.2 中生成的应用公钥</p>
+						<p><img src="https://gw.alipayobjects.com/zos/rmsportal/EUxpNrlWOhTYWbfljYUe.png" alt="img"></p>
+					</li>
+					<li><p>登录开放平台设置应用公钥</p>
+						<p><img src="https://gw.alipayobjects.com/zos/rmsportal/CyUzmlKmpCNPAPdNevTd.png" alt="img"></p>
+					</li>
+				</ol>
+				<h2 id="4-">4. 保存支付宝公钥</h2>
+				<blockquote>
+					<p>“支付宝公钥”用于开放平台返回值的进行验签</p>
+				</blockquote>
+				<ol>
+					<li><p>开放平台“应用概览”页面中复制“支付宝公钥”</p>
+						<p><img src="https://gw.alipayobjects.com/zos/rmsportal/kdRFpjYmQdBNonEMXSBO.png" alt="img"></p>
+					</li>
+					<li><p>新建 public-key.pem 保存私钥，文件格式如下：</p>
+						<pre><code><span class="hljs-comment">// 粘贴上一步复制的“支付宝公钥”到这里（不需要换行）</span></code></pre><p>完整的 public-key.pem 文件例子：</p>
+					<pre><code>MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7EqgH28GDbCgaonIDWIhMSPYAGMLNjCzmk7jtxNSLFjI+bbTZe43N5Bbo8cmk<span class="hljs-regexp">/LpULIGrtiyhfre1WMWIG6voK/</span>GNL+<span class="hljs-number">9</span>pY3PxkOdr+VveWp3ZDuaWQToN7Tq<span class="hljs-regexp">/f+MUMkvEBhcCP+b7UheQXX80zAEWe7HGh5mpj9bmbtb57d34e1b72GX/</span>dTVVeJDU5<span class="hljs-regexp">/Eg6L/</span>UcKeOmd4xtdGP4xqAPbgNhe2JuTOtRR<span class="hljs-regexp">/xl0ZT9mUtEpBLabrTR1EO256Zk1lzgXuMepAlyCIN0Rm0DxqnosRZjRg41ahkXs3RzInRbWXIIVdrjJsjC7rnlt6zZHdqRSDKy/</span><span class="hljs-number">9</span>sZbAv0e8ZjaHjIEnvQIDAQAB</code></pre></li>
+				</ol>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum">
+						<a href="enums/channel.html" class="tsd-kind-icon">Channel</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/businesserror.html" class="tsd-kind-icon">Business<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/client.html" class="tsd-kind-icon">Client</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/finance.html" class="tsd-kind-icon">Finance</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/monitor.html" class="tsd-kind-icon">Monitor</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/pay.html" class="tsd-kind-icon">Pay</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/requesterror.html" class="tsd-kind-icon">Request<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/validatesignerror.html" class="tsd-kind-icon">Validate<wbr>Sign<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/apppaytradereq.html" class="tsd-kind-icon">App<wbr>Pay<wbr>Trade<wbr>Req</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/apppaytraderes.html" class="tsd-kind-icon">App<wbr>Pay<wbr>Trade<wbr>Res</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/canceltradereq.html" class="tsd-kind-icon">Cancel<wbr>Trade<wbr>Req</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/canceltraderes.html" class="tsd-kind-icon">Cancel<wbr>Trade<wbr>Res</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/clientoptions.html" class="tsd-kind-icon">Client<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/closetradereq.html" class="tsd-kind-icon">Close<wbr>Trade<wbr>Req</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/closetraderes.html" class="tsd-kind-icon">Close<wbr>Trade<wbr>Res</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/commonres.html" class="tsd-kind-icon">Common<wbr>Res</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/createtradereq.html" class="tsd-kind-icon">Create<wbr>Trade<wbr>Req</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/createtraderes.html" class="tsd-kind-icon">Create<wbr>Trade<wbr>Res</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/executeparams.html" class="tsd-kind-icon">Execute<wbr>Params</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/extuserinfo.html" class="tsd-kind-icon">Ext<wbr>User<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/extendparams.html" class="tsd-kind-icon">Extend<wbr>Params</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/goodsdetail.html" class="tsd-kind-icon">Goods<wbr>Detail</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/invoiceinfo.html" class="tsd-kind-icon">Invoice<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/invoicekeyinfo.html" class="tsd-kind-icon">Invoice<wbr>Key<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/logisticsdetail.html" class="tsd-kind-icon">Logistics<wbr>Detail</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/notifyparams.html" class="tsd-kind-icon">Notify<wbr>Params</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/openapiroyaltydetailinfopojo.html" class="tsd-kind-icon">Open<wbr>Api<wbr>Royalty<wbr>Detail<wbr>Info<wbr>Pojo</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/pagepaytradereq.html" class="tsd-kind-icon">Page<wbr>Pay<wbr>Trade<wbr>Req</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/paytradereq.html" class="tsd-kind-icon">Pay<wbr>Trade<wbr>Req</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/paytraderes.html" class="tsd-kind-icon">Pay<wbr>Trade<wbr>Res</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/precreatetradereq.html" class="tsd-kind-icon">Pre<wbr>Create<wbr>Trade<wbr>Req</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/precreatetraderes.html" class="tsd-kind-icon">Pre<wbr>Create<wbr>Trade<wbr>Res</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/presetpaytoolinfo.html" class="tsd-kind-icon">Preset<wbr>Pay<wbr>Tool<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/promoparam.html" class="tsd-kind-icon">Promo<wbr>Param</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/querybilldownloadurlreq.html" class="tsd-kind-icon">Query<wbr>Bill<wbr>Download<wbr>Url<wbr>Req</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/querybilldownloadurlres.html" class="tsd-kind-icon">Query<wbr>Bill<wbr>Download<wbr>Url<wbr>Res</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/queryrefundreq.html" class="tsd-kind-icon">Query<wbr>Refund<wbr>Req</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/queryrefundres.html" class="tsd-kind-icon">Query<wbr>Refund<wbr>Res</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/querytradereq.html" class="tsd-kind-icon">Query<wbr>Trade<wbr>Req</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/querytraderes.html" class="tsd-kind-icon">Query<wbr>Trade<wbr>Res</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/receiveraddressinfo.html" class="tsd-kind-icon">Receiver<wbr>Address<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/refundroyaltyresult.html" class="tsd-kind-icon">Refund<wbr>Royalty<wbr>Result</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/refundtradereq.html" class="tsd-kind-icon">Refund<wbr>Trade<wbr>Req</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/refundtraderes.html" class="tsd-kind-icon">Refund<wbr>Trade<wbr>Res</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/royaltydetailinfos.html" class="tsd-kind-icon">Royalty<wbr>Detail<wbr>Infos</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/royaltyinfo.html" class="tsd-kind-icon">Royalty<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/settledetailinfo.html" class="tsd-kind-icon">Settle<wbr>Detail<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/settleinfo.html" class="tsd-kind-icon">Settle<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/settleorderreq.html" class="tsd-kind-icon">Settle<wbr>Order<wbr>Req</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/settleorderres.html" class="tsd-kind-icon">Settle<wbr>Order<wbr>Res</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/submerchant.html" class="tsd-kind-icon">Sub<wbr>Merchant</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/syncheartbeatperf.html" class="tsd-kind-icon">Sync<wbr>Heart<wbr>Beat<wbr>Perf</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/syncheartbeatreq.html" class="tsd-kind-icon">Sync<wbr>Heart<wbr>Beat<wbr>Req</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/syncheartbeatres.html" class="tsd-kind-icon">Sync<wbr>Heart<wbr>Beat<wbr>Res</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/syncorderinforeq.html" class="tsd-kind-icon">Sync<wbr>Order<wbr>Info<wbr>Req</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/syncorderinfores.html" class="tsd-kind-icon">Sync<wbr>Order<wbr>Info<wbr>Res</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/tradefundbill.html" class="tsd-kind-icon">Trade<wbr>Fund<wbr>Bill</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/voucherdetail.html" class="tsd-kind-icon">Voucher<wbr>Detail</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/wappaytradereq.html" class="tsd-kind-icon">Wap<wbr>Pay<wbr>Trade<wbr>Req</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/wappaytraderes.html" class="tsd-kind-icon">Wap<wbr>Pay<wbr>Trade<wbr>Res</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#formatkey" class="tsd-kind-icon">format<wbr>Key</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getdecodesign" class="tsd-kind-icon">get<wbr>Decode<wbr>Sign</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#gettimestamp" class="tsd-kind-icon">get<wbr>Timestamp</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-not-exported">
+						<a href="globals.html#isbinaryparam" class="tsd-kind-icon">is<wbr>Binary<wbr>Param</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#sign" class="tsd-kind-icon">sign</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#verifysign" class="tsd-kind-icon">verify<wbr>Sign</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-not-exported">
+						<a href="globals.html#zerosleft" class="tsd-kind-icon">zeros<wbr>Left</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#alipay_algorithm_mapping" class="tsd-kind-icon">ALIPAY_<wbr>ALGORITHM_<wbr>MAPPING</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
