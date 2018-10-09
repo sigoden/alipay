@@ -51,7 +51,7 @@ export class BusinessError extends Error {
   public subMsg?: string;
   constructor(res: CommonRes) {
     super(
-      `业务错误,code:${res.code},msg:${res.msg},subCode:${
+      `code:${res.code},msg:${res.msg},subCode:${
         res.sub_code
       },subMsg:${res.sub_msg}`
     );

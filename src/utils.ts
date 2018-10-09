@@ -49,30 +49,6 @@ export function formatKey(key: string, type: string): string {
   return `-----BEGIN ${type}-----\n${item.join("")}\n-----END ${type}-----`;
 }
 
-export let aesIV = crypto.randomBytes(16);
-
-export function aesEncode(data: string, secret: string) {
-  const cipher = crypto.createCipheriv(
-    "aes-192-cbc",
-    Buffer.from(secret),
-    aesIV
-  );
-  let crypted = cipher.update(data, "utf8", "base64");
-  crypted += cipher.final();
-  return crypted;
-}
-
-export function aesDecode(data: string, secret: string) {
-  const decipher = crypto.createDecipheriv(
-    "aes-192-cbc",
-    Buffer.from(secret),
-    aesIV
-  );
-  let decrypted = decipher.update(data, "base64", "utf8");
-  decrypted += decipher.final();
-  return decrypted;
-}
-
 export function getDecodeSign(params: any) {
   const signArgs = omit(params, ["sign", "sign_type"]);
 

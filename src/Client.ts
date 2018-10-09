@@ -11,7 +11,6 @@ import * as utils from "./utils";
 
 export class Client {
   public options: ClientOptions;
-  private _aesCode?: string;
   constructor(options: ClientOptions) {
     options.privateKey = utils.formatKey(options.privateKey, "RSA PRIVATE KEY");
     options.alipayPublicKey = utils.formatKey(
@@ -26,10 +25,6 @@ export class Client {
       },
       options
     );
-  }
-
-  set aesCode(code: string) {
-    this._aesCode = code;
   }
 
   public async execute<REQ, RES extends CommonRes>(
@@ -54,9 +49,6 @@ export class Client {
           }
           const body = JSON.parse(bodyStr);
           const resKey = method.replace(/\./g, "_") + "_response";
-          if (typeof body[resKey] === "string") {
-            body[resKey] = utils.aesDecode(body[resKey], this._aesCode);
-          }
           const ret = <RES> body[resKey];
           if (
             !utils.verifySign(
@@ -126,9 +118,6 @@ export class Client {
   private setExecuteParams(method: string, req: any, params: ExecuteParams) {
     if (!Object.keys(req).some(key => isBinaryParam(req[key]))) {
       params.biz_content = JSON.stringify(req);
-      if (this._aesCode) {
-        params.biz_content = utils.aesEncode(params.biz_content, this._aesCode);
-      }
       this.appendParams(method, params, this.options);
       params.sign = utils.sign(params, this.options);
     } else {
