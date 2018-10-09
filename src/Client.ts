@@ -48,32 +48,28 @@ export class Client {
           },
           params.biz_content ? { qs: params } : { formData: params }
         ),
-        (err, _, body: any) => {
+        (err, _, bodyStr: string) => {
           if (err) {
             return reject(new errors.RequestError(err));
           }
-          if (typeof body === "string") {
-            return body;
-          }
+          const body = JSON.parse(bodyStr);
           const resKey = method.replace(/\./g, "_") + "_response";
           if (typeof body[resKey] === "string") {
             body[resKey] = utils.aesDecode(body[resKey], this._aesCode);
-          } else if (typeof body[resKey] === "undefined") {
-            reject(new errors.BusinessError(<CommonRes> body.errror_response));
           }
+          const ret = <RES> body[resKey];
           if (
             !utils.verifySign(
-              body[resKey],
+              JSON.stringify(ret),
               body.sign,
               this.options.alipayPublicKey,
               this.options.signType
             )
           ) {
-            return reject(new errors.ValidateSignError(body));
+            return reject(new errors.ValidateSignError(ret));
           }
-          const ret = <RES> body[resKey];
-          if (ret.code !== "10000") {
-            reject(new errors.BusinessError(ret));
+          if (!/^1/.test(ret.code)) {
+            return reject(new errors.BusinessError(ret));
           }
           resolve(ret);
         }
@@ -160,7 +156,7 @@ export class Client {
     params.app_id = options.appId;
     params.charset = params.charset || "utf-8";
     params.version = params.version || "1.0";
-    params.signType = params.signType || "1.0";
+    params.sign_type = params.signType || "RSA2";
     params.timestamp = params.timestamp || utils.getTimestamp();
   }
 }

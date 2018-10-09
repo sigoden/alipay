@@ -74,7 +74,7 @@ describe("Client", () => {
         },
         sign: "signStr"
       };
-      (request as any).mockImplementation((v, cb) => cb(null, null, resBody));
+      (request as any).mockImplementation((v, cb) => cb(null, null, JSON.stringify(resBody)));
       try {
         await client.execute(
           helper.METHOD_CLOSE_TRADE,
@@ -94,7 +94,7 @@ describe("Client", () => {
         },
         sign: "OK"
       };
-      (request as any).mockImplementation((v, cb) => cb(null, null, resBody));
+      (request as any).mockImplementation((v, cb) => cb(null, null, JSON.stringify(resBody)));
       try {
         await client.execute(
           helper.METHOD_CLOSE_TRADE,
@@ -115,12 +115,12 @@ describe("Client", () => {
         alipay_trade_close_response: data,
         sign: "OK"
       };
-      (request as any).mockImplementation((v, cb) => cb(null, null, resBody));
+      (request as any).mockImplementation((v, cb) => cb(null, null, JSON.stringify(resBody)));
       const ret = await client.execute(
         helper.METHOD_CLOSE_TRADE,
         helper.BIZ_CONTENT_CLOSE_TRADE
       );
-      expect(ret).toBe(data);
+      expect(ret).toEqual(data);
     });
   });
   describe("pageExecute", () => {

@@ -14,6 +14,22 @@ export class Pay {
   }
 
   /**
+   * 统一收单交易支付接口
+   * @see {@link https://docs.open.alipay.com/api_1/alipay.trade.pay/}
+   */
+  public async payTrade(
+    req: types.PayTradeReq,
+    params: ExecuteParams & {
+      notify_url?: string;
+    } = {}
+  ) {
+    return this.client.execute<
+      types.PayTradeReq,
+      CommonRes & types.PayTradeRes
+    >("alipay.trade.pay", req, params);
+  }
+
+  /**
    * app支付接口
    * @see {@link https://docs.open.alipay.com/api_1/alipay.trade.app.pay/}
    */

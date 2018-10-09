@@ -11,7 +11,7 @@ export const ALIPAY_ALGORITHM_MAPPING = {
  * 签名
  */
 export function sign(params: any = {}, options: ClientOptions): string {
-  if (params.biz_content) {
+  if (typeof params.biz_content === "object") {
     params.biz_content = JSON.stringify(params.biz_content);
   }
 
@@ -49,15 +49,25 @@ export function formatKey(key: string, type: string): string {
   return `-----BEGIN ${type}-----\n${item.join("")}\n-----END ${type}-----`;
 }
 
+export let aesIV = crypto.randomBytes(16);
+
 export function aesEncode(data: string, secret: string) {
-  const cipher = crypto.createCipheriv("aes-128-ccm", secret, null);
+  const cipher = crypto.createCipheriv(
+    "aes-192-cbc",
+    Buffer.from(secret),
+    aesIV
+  );
   let crypted = cipher.update(data, "utf8", "base64");
   crypted += cipher.final();
   return crypted;
 }
 
-export function aesDecode(data: string, secret) {
-  const decipher = crypto.createDecipheriv("aes-128-ccm", secret, null);
+export function aesDecode(data: string, secret: string) {
+  const decipher = crypto.createDecipheriv(
+    "aes-192-cbc",
+    Buffer.from(secret),
+    aesIV
+  );
   let decrypted = decipher.update(data, "base64", "utf8");
   decrypted += decipher.final();
   return decrypted;

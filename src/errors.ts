@@ -32,6 +32,12 @@ export class BusinessError extends Error {
    */
   public code: string;
   /**
+   * 网关返回码描述,详见文档
+   * @typedef String(-)
+   * @example Business Failed
+   */
+  public msg: string;
+  /**
    * 业务返回码，参见具体的API接口文档
    * @typedef String(-)
    * @example ACQ.TRADE_HAS_SUCCESS
@@ -44,8 +50,13 @@ export class BusinessError extends Error {
    */
   public subMsg?: string;
   constructor(res: CommonRes) {
-    super(res.msg);
+    super(
+      `业务错误,code:${res.code},msg:${res.msg},subCode:${
+        res.sub_code
+      },subMsg:${res.sub_msg}`
+    );
     this.code = res.code;
+    this.msg = res.msg;
     this.subCode = res.sub_code;
     this.subMsg = res.sub_msg;
   }

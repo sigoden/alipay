@@ -3,6 +3,7 @@ export * from "./CancelTrade";
 export * from "./CloseTrade";
 export * from "./CreateTrade";
 export * from "./PagePayTrade";
+export * from "./PayTrade";
 export * from "./PreCreateTrade";
 export * from "./QueryRefund";
 export * from "./QueryTrade";
